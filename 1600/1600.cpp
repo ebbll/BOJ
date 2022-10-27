@@ -1,9 +1,9 @@
 #include <iostream>
 #include <queue>
-#include <tuple>
+#include <algorithm>
 
 int board[300][300];
-int visited[300][300];
+int visited[300][300][31];
 
 int xdirMonkey[4] = {1, -1, 0, 0};
 int ydirMonkey[4] = {0, 0, 1, -1};
@@ -11,7 +11,7 @@ int ydirMonkey[4] = {0, 0, 1, -1};
 int xdirHorse[8] = {1, 1, -1, -1, 2, 2, -2, -2};
 int ydirHorse[8] = {2, -2, 2, -2, 1, -1, 1, -1};
 
-std::queue<std::tuple<int, int, int> > queue;
+std::queue<std::pair<std::pair<int, int>, int> > queue;
 
 int main(void)
 {
@@ -27,34 +27,51 @@ int main(void)
 			std::cin >> board[i][j];
 		}
 	}
-	queue.push(std::make_tuple(0, 0, 0));
-	visited[0][0] = 1;
+
+	std::vector<int> res;
+	queue.push(std::make_pair(std::make_pair(0, 0), K));
+	visited[0][0][K] = 1;
 	while (queue.empty() == false)
 	{
-		int count, x, y;
-		std::tie(count, x, y) = queue.front();
+		int y = queue.front().first.first;
+		int x = queue.front().first.second;
+		int m = queue.front().second;
 		queue.pop();
-		if (count < K)
+
+		if (x == W - 1 && y == H - 1)
+			res.push_back(visited[y][x][m]);
+
+		if (m > 0)
 		{
 			for (int i = 0; i < 8; ++i)
 			{
-				int nx = x + xdirHorse[i];
 				int ny = y + ydirHorse[i];
-				if (nx < 0 || ny < 0 || nx >= W || nx >= H || board[ny][nx] || visited[ny][ny])
-					continue ;
-				queue.push(std::make_tuple(count + 1, nx, ny));
-				visited[ny][nx] = 1;
+				int nx = x + xdirHorse[i];
+				if (nx < 0 || ny < 0 || nx > W - 1 || ny > H - 1)
+					continue;
+				if (board[ny][nx] == 1)
+					continue;
+				queue.push(std::make_pair(std::make_pair(ny, nx), m - 1));
+				visited[ny][nx][m - 1] = visited[y][x][m] + 1;
 			}
 		}
 		for (int i = 0; i < 4; ++i)
 		{
-			int nx = x + xdirMonkey[i];
 			int ny = y + ydirMonkey[i];
-			if (nx < 0 || ny < 0 || nx <= W || ny >= H || board[ny][nx] || visited[ny][ny])
-				continue ;
-			queue.push(std::make_tuple(count, nx, ny));
+			int nx = x + xdirMonkey[i];
+			if (nx < 0 || ny < 0 || nx > W - 1 || ny > H - 1)
+				continue;
+			if (board[ny][nx] || visited[ny][nx][m])
+				continue;
+			queue.push(std::make_pair(std::make_pair(ny, nx), m));
+			visited[ny][nx][m] = visited[y][x][m] + 1;
 		}
 	}
+
+	if (res.size() == 0)
+		std::cout << "-1";
+	else
+		std::cout << *std::min_element(res.begin(), res.end()) - 1;
 
 	return 0;
 }

@@ -5,19 +5,15 @@ int main(void) {
 	std::cin.tie(NULL);
 	std::ios::sync_with_stdio(false);
 
-	char c;
+	std::string S;
 	unsigned long long L, H = 0;
 	unsigned long long R = 31, M = 1234567891;
-	unsigned long long moduler[50] = {1, };
+	unsigned long long ri = 1;
 
-	for (int i = 1; i < 50; ++i) {
-		moduler[i] = (moduler[i - 1] * R) % M;
-	}
-
-	std::cin >> L;
+	std::cin >> L >> S;
 	for (int i = 0; i < L; ++i) {
-		std::cin >> c;
-		H = (H + (c - 'a' + 1) * moduler[i]) % M;
+		H = (H + (S[i] - 'a' + 1) * ri) % M;
+		ri = (ri * R) % M;
 	}
 	std::cout << H;
 

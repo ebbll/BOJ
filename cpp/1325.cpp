@@ -6,9 +6,8 @@ int N, M;
 int A, B;
 int count, maxCount;
 std::vector<int> graph[10001];
-bool visited[10001];
-int dp[10001];
 std::vector<std::pair<int, int> > answer;
+bool visited[10001];
 
 void dfs(int node) {
 	for (size_t i = 1; i <= graph[node].size(); ++i) {

@@ -18,7 +18,6 @@ void dfs(int start, int count) {
 				else if (!team[i] && !team[j]) scoreB += S[i][j];
 			}
 		}
-
 		cal = std::abs(scoreA - scoreB);
 		if (min > cal) min = cal;
 		return ;

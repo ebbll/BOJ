@@ -1,19 +1,19 @@
 #include <iostream>
 
-void func(int start, int N, int M, int depth) {
-	static int result[8];
+int N, M;
+int result[8];
 
+void func(int start, int depth) {
 	if (depth == M) {
-		for (int i = 0; i < M; ++i) {
+		for (int i = 0; i < M; ++i)
 			std::cout << result[i] << ' ';
-		}
 		std::cout << '\n';
 		return;
 	}
 
 	for (int i = start; i <= N; ++i) {
 		result[depth] = i;
-		func(i + 1, N, M, depth + 1);
+		func(i + 1, depth + 1);
 	}
 }
 
@@ -24,7 +24,7 @@ int main(void) {
 	int N, M;
 	std::cin >> N >> M;
 
-	func(1, N, M, 0);
+	func(1, 0);
 
 	return 0;
 }
